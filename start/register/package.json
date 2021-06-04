@@ -1,0 +1,8 @@
+{
+  "name": "start",
+  "version": "1.0.0",
+  "description": "Let the games begin!",
+  "main": "app.js",
+  "author": "A. Ulvi",
+  "license": "MIT"
+}

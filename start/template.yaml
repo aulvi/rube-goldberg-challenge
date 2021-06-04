@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Form handler to initiate The Machine
+
+# Okay let's create stuff in AWS!
+Resources:
+
+  # This is the SNS topic we will pubish our registration events.
+  RegistrationTopic:
+    Type: AWS::SNS::Topic
+
+  # This is where we will store the registration data.
+  RegistrationTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "registration-table"
+      AttributeDefinitions:
+        -
+          AttributeName: "email"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "email"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+
+  # This lambda function handles the form submission from the registrant.
+  RegisterPostHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: register/
+      Handler: post.handler
+      Runtime: nodejs14.x
+      Events:
+        Register:
+          Type: Api
+          Properties:
+            Path: /register
+            Method: post
+    Policies:
+      - SNSPublishMessagePolicy:
+        TopicName: !GetAtt RegistrationTopic.TopicName
+
+  # This lambda function consumes the event from SNS and saves the registration to the database.
+  RegistrationTopicSubscriber:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: register/
+      Handler: sns.handler
+      Runtime: nodejs14.x
+      Events:
+        RegistrationEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref RegistrationTopic
+    Policies:
+      - DynamoDBCrudPolicy:
+        TableName: !Ref RegistrationTable
+
+Outputs:
+  HelloWorldApi:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/register/"
+
