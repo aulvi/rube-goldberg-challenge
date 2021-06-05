@@ -4,7 +4,7 @@ Welcome to the Rube Goldberg Challenge! This solution contains a sample Machine 
 
 Registration Form --> Registration Post Handler (Lambda) --> SNS Topic --> Registration Message Subscriber (Lambda) --> DynamoDB
 
-(sure wish that was a diagram! anyways...)
+![Alt text](./rube-goldberg-arch-v1.png?raw=true "Something like this")
 
 The goal in this challenge is to add steps in between the two Lambda handlers, thus increasing it's silliness and decreasing it's efficiency. Why are we doing this again?
 
