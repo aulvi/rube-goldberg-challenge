@@ -10,6 +10,7 @@ Globals:
         Environment:
             Variables:
                 REGISTRATION_TOPIC: !Ref RegistrationTopic
+                REGISTRATION_TABLE: !Ref RegistrationTable
 
 # Okay let's create stuff in AWS!
 Resources:
@@ -22,7 +23,6 @@ Resources:
   RegistrationTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: "registration-table"
       AttributeDefinitions:
         -
           AttributeName: "email"
@@ -39,7 +39,7 @@ Resources:
   RegisterPostHandler:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: register/
+      CodeUri: src/
       Handler: post.handler
       Events:
         Register:
@@ -55,7 +55,7 @@ Resources:
   RegistrationTopicSubscriber:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: register/
+      CodeUri: src/
       Handler: sns.handler
       Events:
         RegistrationEvent:
@@ -67,6 +67,6 @@ Resources:
             TableName: !Ref RegistrationTable
 
 Outputs:
-  HelloWorldApi:
+  RegistrationApi:
     Description: "API Gateway endpoint URL"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/register/"

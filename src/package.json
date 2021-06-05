@@ -1,0 +1,21 @@
+{
+  "name": "event-registration",
+  "version": "1.0.0",
+  "description": "Let the games begin!",
+  "main": "app.js",
+  "author": "A. Ulvi",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint *.js",
+    "lintfix": "eslint --fix *.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sns": "^3.17.0",
+    "@aws-sdk/lib-dynamodb": "^3.18.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.28.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4"
+  }
+}
