@@ -2,6 +2,15 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Form handler to initiate The Machine
 
+# Config applied to all lambda functions.
+Globals:
+    Function:
+        Timeout: 30
+        Runtime: nodejs14.x
+        Environment:
+            Variables:
+                REGISTRATION_TOPIC: !Ref RegistrationTopic
+
 # Okay let's create stuff in AWS!
 Resources:
 
@@ -32,16 +41,15 @@ Resources:
     Properties:
       CodeUri: register/
       Handler: post.handler
-      Runtime: nodejs14.x
       Events:
         Register:
           Type: Api
           Properties:
             Path: /register
             Method: post
-    Policies:
-      - SNSPublishMessagePolicy:
-        TopicName: !GetAtt RegistrationTopic.TopicName
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt RegistrationTopic.TopicName
 
   # This lambda function consumes the event from SNS and saves the registration to the database.
   RegistrationTopicSubscriber:
@@ -49,18 +57,16 @@ Resources:
     Properties:
       CodeUri: register/
       Handler: sns.handler
-      Runtime: nodejs14.x
       Events:
         RegistrationEvent:
           Type: SNS
           Properties:
             Topic: !Ref RegistrationTopic
-    Policies:
-      - DynamoDBCrudPolicy:
-        TableName: !Ref RegistrationTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref RegistrationTable
 
 Outputs:
   HelloWorldApi:
     Description: "API Gateway endpoint URL"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/register/"
-

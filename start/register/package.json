@@ -4,5 +4,8 @@
   "description": "Let the games begin!",
   "main": "app.js",
   "author": "A. Ulvi",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-sns": "^3.17.0"
+  }
 }
