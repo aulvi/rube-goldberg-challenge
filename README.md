@@ -2,8 +2,6 @@
 
 Welcome to the Rube Goldberg Challenge! This solution contains a sample Machine to store an event registration (like when someone signs up for an event). The architecture looks something like this:
 
-Registration Form --> Registration Post Handler (Lambda) --> SNS Topic --> Registration Message Subscriber (Lambda) --> DynamoDB
-
 ![Alt text](./rube-goldberg-arch-v1.png?raw=true "Something like this")
 
 The goal in this challenge is to add steps in between the two Lambda handlers, thus increasing it's silliness and decreasing it's efficiency. Why are we doing this again?
